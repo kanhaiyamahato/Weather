@@ -1,0 +1,865 @@
+/* ================================================
+   SkyView Weather App — CSS Styles
+   A minimalistic, beginner-friendly weather app
+================================================ */
+
+/* ====== RESET & BASE ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    transition: background 1s ease;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+/* ====== WEATHER BACKGROUND ANIMATIONS ====== */
+.weather-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.weather-anim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- Sun Animation --- */
+.sun {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, #fff700, #ffb300);
+    border-radius: 50%;
+    position: absolute;
+    top: 80px;
+    right: 15%;
+    box-shadow: 0 0 60px rgba(255, 200, 0, 0.6), 0 0 120px rgba(255, 200, 0, 0.3);
+    animation: sunPulse 4s ease-in-out infinite;
+}
+
+.sun-rays {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 40px;
+    right: calc(15% - 40px);
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 80px rgba(255, 220, 50, 0.15);
+    animation: sunRaysRotate 20s linear infinite;
+}
+
+@keyframes sunPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(255, 200, 0, 0.6); }
+    50% { transform: scale(1.08); box-shadow: 0 0 90px rgba(255, 200, 0, 0.8); }
+}
+
+@keyframes sunRaysRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Cloud Animation --- */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 100px;
+    filter: blur(2px);
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.cloud-1 {
+    width: 250px; height: 60px;
+    top: 80px; left: -250px;
+    animation: cloudMove 25s linear infinite;
+}
+.cloud-1::before { width: 100px; height: 80px; top: -40px; left: 40px; }
+.cloud-1::after { width: 70px; height: 55px; top: -25px; left: 120px; }
+
+.cloud-2 {
+    width: 200px; height: 50px;
+    top: 200px; left: -200px;
+    animation: cloudMove 30s linear infinite 5s;
+}
+.cloud-2::before { width: 80px; height: 65px; top: -35px; left: 30px; }
+.cloud-2::after { width: 60px; height: 45px; top: -20px; left: 100px; }
+
+.cloud-3 {
+    width: 180px; height: 45px;
+    top: 140px; left: -180px;
+    animation: cloudMove 22s linear infinite 10s;
+}
+.cloud-3::before { width: 70px; height: 60px; top: -30px; left: 35px; }
+.cloud-3::after { width: 50px; height: 40px; top: -18px; left: 90px; }
+
+.cloud-4 {
+    width: 220px; height: 55px;
+    top: 300px; left: -220px;
+    animation: cloudMove 28s linear infinite 15s;
+}
+.cloud-4::before { width: 90px; height: 70px; top: -35px; left: 40px; }
+.cloud-4::after { width: 65px; height: 50px; top: -22px; left: 110px; }
+
+.cloud-dark {
+    background: rgba(80, 80, 100, 0.5);
+}
+
+.cloud-light {
+    background: rgba(200, 210, 230, 0.4);
+}
+
+@keyframes cloudMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 300px)); }
+}
+
+/* --- Rain Animation --- */
+.rain-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+}
+
+.raindrop {
+    position: absolute;
+    width: 2px;
+    background: linear-gradient(transparent, rgba(174, 194, 224, 0.6));
+    border-radius: 0 0 2px 2px;
+    animation: rainFall linear infinite;
+}
+
+@keyframes rainFall {
+    0% { transform: translateY(-100px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* --- Snow Animation --- */
+.snow-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+}
+
+.snowflake {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 10px;
+    animation: snowFall linear infinite;
+}
+
+@keyframes snowFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- Lightning Animation --- */
+.lightning {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0);
+    animation: lightningFlash 6s infinite;
+    pointer-events: none;
+}
+
+@keyframes lightningFlash {
+    0%, 100% { background: rgba(255, 255, 255, 0); }
+    1% { background: rgba(255, 255, 255, 0.3); }
+    2% { background: rgba(255, 255, 255, 0); }
+    3% { background: rgba(255, 255, 255, 0.15); }
+    4% { background: rgba(255, 255, 255, 0); }
+}
+
+/* --- Fog/Mist Animation --- */
+.fog {
+    position: absolute;
+    width: 120%;
+    height: 150px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), rgba(255,255,255,0.25), rgba(255,255,255,0.15), transparent);
+    border-radius: 50%;
+    filter: blur(30px);
+}
+
+.fog-1 { top: 20%; left: -10%; animation: fogDrift 15s ease-in-out infinite; }
+.fog-2 { top: 45%; left: -10%; animation: fogDrift 20s ease-in-out infinite 3s; }
+.fog-3 { top: 70%; left: -10%; animation: fogDrift 18s ease-in-out infinite 7s; }
+
+@keyframes fogDrift {
+    0%, 100% { transform: translateX(-10%); }
+    50% { transform: translateX(10%); }
+}
+
+/* --- Moon & Stars Animation --- */
+.moon {
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle at 65% 35%, #f5f3ce, #e8e4b8);
+    border-radius: 50%;
+    position: absolute;
+    top: 80px;
+    right: 15%;
+    box-shadow: 0 0 40px rgba(245, 243, 206, 0.4), 0 0 80px rgba(245, 243, 206, 0.15);
+    animation: moonGlow 5s ease-in-out infinite;
+}
+
+.moon::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, rgba(100, 100, 140, 0.3), transparent);
+    border-radius: 50%;
+    top: 5px;
+    left: -5px;
+}
+
+@keyframes moonGlow {
+    0%, 100% { box-shadow: 0 0 40px rgba(245, 243, 206, 0.4); }
+    50% { box-shadow: 0 0 60px rgba(245, 243, 206, 0.6); }
+}
+
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+}
+
+
+/* ====== NAVBAR ====== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-brand i {
+    font-size: 1.6rem;
+    color: #ffd700;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    flex: 0 1 450px;
+}
+
+.search-box:focus-within {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.search-icon {
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 10px;
+    font-size: 0.9rem;
+}
+
+.search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.search-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.1);
+}
+
+.location-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.location-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+
+/* ====== MAIN CONTENT ====== */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 180px);
+}
+
+/* --- Welcome Screen --- */
+.welcome-screen {
+    text-align: center;
+    animation: fadeInUp 0.8s ease;
+}
+
+.welcome-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    animation: floatBounce 3s ease-in-out infinite;
+}
+
+@keyframes floatBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.welcome-screen h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.welcome-screen p {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 30px;
+}
+
+.quick-tips {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tip {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.tip:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.tip i {
+    margin-right: 6px;
+    color: #ffd700;
+}
+
+/* --- Loading Screen --- */
+.loading-screen {
+    text-align: center;
+    animation: fadeInUp 0.4s ease;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Error Screen --- */
+.error-screen {
+    text-align: center;
+    animation: fadeInUp 0.5s ease;
+}
+
+.error-screen i {
+    font-size: 3rem;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.error-screen h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.error-screen p {
+    opacity: 0.8;
+}
+
+/* --- Weather Display --- */
+.weather-display {
+    width: 100%;
+    max-width: 800px;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Main Weather Card --- */
+.weather-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 30px 35px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.location-info h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.location-info h2 i {
+    color: #ff6b6b;
+    margin-right: 6px;
+    font-size: 1rem;
+}
+
+.date-time {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.weather-icon-big {
+    font-size: 3.5rem;
+    opacity: 0.9;
+    animation: floatBounce 3s ease-in-out infinite;
+}
+
+.card-middle {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.temperature {
+    display: flex;
+    align-items: flex-start;
+}
+
+.temp-num {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.temp-unit {
+    font-size: 1.8rem;
+    font-weight: 300;
+    margin-top: 8px;
+    opacity: 0.8;
+}
+
+.weather-desc p:first-child {
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.feels-like {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* --- Detail Cards Grid --- */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.detail-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    padding: 18px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+}
+
+.detail-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.detail-card i {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.7);
+    width: 35px;
+    text-align: center;
+}
+
+.detail-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.72rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+/* ====== FOOTER ====== */
+.footer {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.dev-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.dev-avatar {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dev-details {
+    text-align: left;
+}
+
+.dev-label {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-bottom: 2px;
+}
+
+.heart-beat {
+    color: #ff6b6b;
+    animation: heartBeat 1.2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.25); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.25); }
+    56% { transform: scale(1); }
+}
+
+.dev-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.dev-role {
+    font-size: 0.78rem;
+    opacity: 0.6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.footer-copy {
+    font-size: 0.72rem;
+    opacity: 0.4;
+}
+
+
+/* ====== BACKGROUND THEMES ====== */
+body.theme-sunny {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #fda085 100%);
+}
+
+body.theme-cloudy {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.theme-rain {
+    background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+}
+
+body.theme-snow {
+    background: linear-gradient(135deg, #e6e9f0 0%, #8e9eab 50%, #667eea 100%);
+}
+
+body.theme-thunder {
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+body.theme-mist {
+    background: linear-gradient(135deg, #606c88 0%, #3f4c6b 100%);
+}
+
+body.theme-night {
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+
+/* ====== RESPONSIVE DESIGN ====== */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 15px;
+    }
+
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+
+    .search-box {
+        order: 3;
+        flex: 1 1 100%;
+    }
+
+    .welcome-screen h1 {
+        font-size: 1.6rem;
+    }
+
+    .welcome-icon {
+        font-size: 3rem;
+    }
+
+    .quick-tips {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .temp-num {
+        font-size: 3.5rem;
+    }
+
+    .weather-icon-big {
+        font-size: 2.5rem;
+    }
+
+    .details-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-top {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .weather-icon-big {
+        align-self: flex-end;
+    }
+
+    .dev-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dev-details {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 12px;
+    }
+
+    .main-content {
+        padding: 25px 15px;
+    }
+
+    .weather-card {
+        padding: 22px 18px;
+        border-radius: 18px;
+    }
+
+    .temp-num {
+        font-size: 3rem;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .detail-card {
+        padding: 14px 12px;
+        border-radius: 12px;
+    }
+
+    .location-info h2 {
+        font-size: 1.2rem;
+    }
+
+    .sun {
+        width: 80px;
+        height: 80px;
+        top: 60px;
+    }
+
+    .moon {
+        width: 60px;
+        height: 60px;
+    }
+}

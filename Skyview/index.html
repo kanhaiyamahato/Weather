@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyView — Weather App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ====== WEATHER ANIMATION BACKGROUND ====== -->
+    <div id="weather-bg" class="weather-bg">
+        <!-- Sunny Animation -->
+        <div id="anim-sunny" class="weather-anim hidden">
+            <div class="sun"></div>
+            <div class="sun-rays"></div>
+        </div>
+
+        <!-- Cloudy Animation -->
+        <div id="anim-cloudy" class="weather-anim hidden">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            <div class="cloud cloud-4"></div>
+        </div>
+
+        <!-- Rain Animation -->
+        <div id="anim-rain" class="weather-anim hidden">
+            <div class="cloud cloud-dark cloud-1"></div>
+            <div class="cloud cloud-dark cloud-2"></div>
+            <div class="rain-container" id="rain-container"></div>
+        </div>
+
+        <!-- Snow Animation -->
+        <div id="anim-snow" class="weather-anim hidden">
+            <div class="cloud cloud-light cloud-1"></div>
+            <div class="cloud cloud-light cloud-2"></div>
+            <div class="snow-container" id="snow-container"></div>
+        </div>
+
+        <!-- Thunder Animation -->
+        <div id="anim-thunder" class="weather-anim hidden">
+            <div class="cloud cloud-dark cloud-1"></div>
+            <div class="cloud cloud-dark cloud-2"></div>
+            <div class="rain-container" id="thunder-rain-container"></div>
+            <div class="lightning" id="lightning"></div>
+        </div>
+
+        <!-- Mist/Fog Animation -->
+        <div id="anim-mist" class="weather-anim hidden">
+            <div class="fog fog-1"></div>
+            <div class="fog fog-2"></div>
+            <div class="fog fog-3"></div>
+        </div>
+
+        <!-- Night Animation -->
+        <div id="anim-night" class="weather-anim hidden">
+            <div class="moon"></div>
+            <div class="stars" id="stars-container"></div>
+        </div>
+    </div>
+
+    <!-- ====== NAVBAR ====== -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-cloud-sun"></i>
+            <span style="cursor: pointer;"> <a href="http://127.0.0.1:5500/index.html" style="text-decoration: none; color: white;" >SkyView</a></span>
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search city name or pin code..." 
+                autocomplete="off"
+            >
+            <button id="searchBtn" class="search-btn" title="Search">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <button id="locationBtn" class="location-btn" title="Use my location">
+            <i class="fas fa-location-crosshairs"></i>
+        </button>
+    </nav>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <main class="main-content">
+
+        <!-- Welcome Screen (shown before search) -->
+        <div id="welcome-screen" class="welcome-screen">
+            <div class="welcome-icon">
+                <i class="fas fa-cloud-sun-rain"></i>
+            </div>
+            <h1>Welcome to SkyView</h1>
+            <p>Search any city or pin code to check the weather</p>
+            <div class="quick-tips">
+                <div class="tip"><i class="fas fa-city"></i> Try: <strong>London</strong></div>
+                <div class="tip"><i class="fas fa-hashtag"></i> Try: <strong>10001</strong> (New York)</div>
+                <div class="tip"><i class="fas fa-location-dot"></i> Or use your <strong>current location</strong></div>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="loading-screen hidden">
+            <div class="loader"></div>
+            <p>Fetching weather data...</p>
+        </div>
+
+        <!-- Error Screen -->
+        <div id="error-screen" class="error-screen hidden">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>Oops!</h2>
+            <p id="error-message">Something went wrong. Please try again.</p>
+        </div>
+
+        <!-- Weather Display -->
+        <div id="weather-display" class="weather-display hidden">
+            
+            <!-- Main Weather Card -->
+            <div class="weather-card main-card">
+                <div class="card-top">
+                    <div class="location-info">
+                        <h2 id="cityName"><i class="fas fa-location-dot"></i> —</h2>
+                        <p id="dateTime" class="date-time">—</p>
+                    </div>
+                    <div class="weather-icon-big" id="weatherIconBig">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                </div>
+                <div class="card-middle">
+                    <div class="temperature">
+                        <span id="tempValue" class="temp-num">—</span>
+                        <span class="temp-unit">°C</span>
+                    </div>
+                    <div class="weather-desc">
+                        <p id="weatherDesc">—</p>
+                        <p id="feelsLike" class="feels-like">Feels like —°C</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Cards Row -->
+            <div class="details-grid">
+                <div class="detail-card">
+                    <i class="fas fa-droplet"></i>
+                    <div>
+                        <span class="detail-value" id="humidity">—%</span>
+                        <span class="detail-label">Humidity</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-wind"></i>
+                    <div>
+                        <span class="detail-value" id="wind">— km/h</span>
+                        <span class="detail-label">Wind Speed</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-eye"></i>
+                    <div>
+                        <span class="detail-value" id="visibility">— km</span>
+                        <span class="detail-label">Visibility</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-gauge-high"></i>
+                    <div>
+                        <span class="detail-value" id="pressure">— hPa</span>
+                        <span class="detail-label">Pressure</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-sunrise"></i>
+                    <div>
+                        <span class="detail-value" id="sunrise">—</span>
+                        <span class="detail-label">Sunrise</span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-sunset"></i>
+                    <div>
+                        <span class="detail-value" id="sunset">—</span>
+                        <span class="detail-label">Sunset</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="dev-info">
+                <div class="dev-avatar">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="dev-details">
+                    <p class="dev-label">Developed with <i class="fas fa-heart heart-beat"></i> by</p>
+                    <h3 class="dev-name">C H I K U</h3>
+                    <p class="dev-role">Developer</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/kanhaiyamahato" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/kanhaiya-mahato-b93a3a2a8?utm_source=share_via&utm_content=profile&utm_medium=member_android" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://x.com/chiku108_" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:kanhaiyamahato2173@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p class="footer-copy">© 2026 SkyView Weather App · All rights reserved</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
